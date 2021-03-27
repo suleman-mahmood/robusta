@@ -26,7 +26,7 @@ class Server:
         Main loop.
         continue receiving messages from Clients and processing it
         '''
-        print("Hellow owrds")
+        print("Helow Suleman")
 
 # Do not change this part of code
 

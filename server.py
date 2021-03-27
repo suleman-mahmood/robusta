@@ -11,6 +11,7 @@ class Server:
     '''
     This is the main Server Class. You will to write Server code inside this class.
     '''
+
     def __init__(self, dest, port, window):
         self.server_addr = dest
         self.server_port = port
@@ -25,9 +26,9 @@ class Server:
         Main loop.
         continue receiving messages from Clients and processing it
         '''
-        raise NotImplementedError
 
 # Do not change this part of code
+
 
 if __name__ == "__main__":
     def helper():
@@ -42,7 +43,7 @@ if __name__ == "__main__":
 
     try:
         OPTS, ARGS = getopt.getopt(sys.argv[1:],
-                                   "p:a:w", ["port=", "address=","window="])
+                                   "p:a:w", ["port=", "address=", "window="])
     except getopt.GetoptError:
         helper()
         exit()
@@ -59,7 +60,7 @@ if __name__ == "__main__":
         elif o in ("-w", "--window="):
             WINDOW = a
 
-    SERVER = Server(DEST, PORT,WINDOW)
+    SERVER = Server(DEST, PORT, WINDOW)
     try:
         SERVER.start()
     except (KeyboardInterrupt, SystemExit):

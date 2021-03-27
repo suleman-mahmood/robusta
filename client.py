@@ -17,10 +17,12 @@ receive_handler() function is running another thread and you have to listen
 for incoming messages in this function.
 '''
 
+
 class Client:
     '''
     This is the main Client Class. 
     '''
+
     def __init__(self, username, dest, port, window_size):
         self.server_addr = dest
         self.server_port = port
@@ -36,15 +38,11 @@ class Client:
         Start by sending the server a JOIN message.
         Waits for userinput and then process it
         '''
-        raise NotImplementedError
-            
 
     def receive_handler(self):
         '''
         Waits for a message from server and process it accordingly
         '''
-        raise NotImplementedError
-
 
 
 # Do not change this part of code
@@ -61,7 +59,7 @@ if __name__ == "__main__":
         print("-h | --help Print this help")
     try:
         OPTS, ARGS = getopt.getopt(sys.argv[1:],
-                                   "u:p:a:w", ["user=", "port=", "address=","window="])
+                                   "u:p:a:w", ["user=", "port=", "address=", "window="])
     except getopt.error:
         helper()
         exit(1)

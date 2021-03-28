@@ -17,6 +17,24 @@ receive_handler() function is running another thread and you have to listen
 for incoming messages in this function.
 '''
 
+# blochain = [
+#     block1,
+#     block2,
+#     ...,
+# ]
+
+# block = {
+#     head: "12312312",
+#     body: "transaction data"
+# }
+
+# key = ("9482934823", "5") # 0 - 10
+
+# new_body = ""
+
+# for b in body:
+#     new_body.append(ord(b) - 5)
+
 
 class Client:
     '''

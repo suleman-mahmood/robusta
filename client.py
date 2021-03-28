@@ -7,7 +7,6 @@ import socket
 import random
 from threading import Thread
 import os
-import util
 import json
 
 

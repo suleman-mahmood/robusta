@@ -5,7 +5,6 @@ import sys
 import json
 import getopt
 import socket
-import util
 
 # Incoming blocks
 # Add the incoming blocks to the ledger

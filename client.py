@@ -142,6 +142,8 @@ class Client:
                         "Enter the bank name from which you want to request the loan from:")
                     loan_amount = input("Enter the loan amount:")
 
+                    msg_body
+
                     # Create a block from your key
                     # Send the encrypted block to miner so that he can create a block for loan request
 

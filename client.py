@@ -102,11 +102,9 @@ class Client:
                 self.role = "user"
             self.my_key = random.randrange(0, 1000)
             file = open('keys.txt', 'a')
-            # Append 'hello' at the end of file
             file.write('\n')
             write_to = str(encoded) + " " + str(self.my_key) + " " + self.role
-
-            print(write_to)
+            # print(write_to)
             file.write(write_to)
             # Close the file
             file.close()
@@ -236,19 +234,19 @@ class Client:
         '''
 
         # The miner sends an updated ledger everytime it changes
-        # while True:
-        #
-        #     # Recieve the incoming ledger
-        #     incoming_ledger, address = self.sock.recvfrom(4096)
-        #
-        #     # Decode the ledger
-        #     incoming_ledger = incoming_ledger.decode("utf-8")
-        #
-        #     # Convert the ledger from string to list
-        #     incoming_ledger = json.loads(incoming_ledger)
-        #
-        #     # Update the ledger
-        #     self.ledger = incoming_ledger
+        while True:
+
+            # Recieve the incoming ledger
+            incoming_ledger, address = self.sock.recvfrom(4096)
+
+            # Decode the ledger
+            incoming_ledger = incoming_ledger.decode("utf-8")
+
+            # Convert the ledger from string to list
+            incoming_ledger = json.loads(incoming_ledger)
+
+            # Update the ledger
+            self.ledger = incoming_ledger
 
     # Encrypts the string using key
     def encrypt_string(self, msg):

@@ -52,6 +52,8 @@ class Server:
             # Add the block to the ledger
             self.ledger.append(incoming_block)
 
+            print(self.ledger)
+
             ledger_to_send = json.dumps(self.ledger)
 
             # Broadcast the updated ledger to the whole network

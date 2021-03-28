@@ -52,7 +52,6 @@ class Client:
             encoded = encoded + str(ord(char))
         # word = "".join([chr(value) for value in b])
         # for i in range(len(b)):
-        encoded = int(encoded)
         self.encoded_username = encoded
         found_user = False
         file = open("keys.txt")
@@ -120,7 +119,7 @@ class Client:
                     # Read your records from the ledger and display them
                     for block in self.ledger:
 
-                        if block["header"] == self.encoded_username and block["msg_type"] == "financial_history":
+                        if block["header"] == str(self.encoded_username) and block["msg_type"] == "financial_history":
                             msg_body = block["body"]
 
                             # Decrypt the msg
@@ -135,7 +134,7 @@ class Client:
                     # Read pending requests from ledger and then display their statuses
                     for block in self.ledger:
 
-                        if block["header"] == self.encoded_username and block["msg_type"] == "approve":
+                        if block["header"] == str(self.encoded_username) and block["msg_type"] == "approve":
                             msg_body = block["body"]
 
                             # Decrypt the msg
@@ -158,13 +157,22 @@ class Client:
                     for char in bank_name:
                         encoded_bank_name += str(ord(char))
 
-                    encoded_bank_name = int(encoded_bank_name)
-
                     # Create the body of the msg
                     new_body = str(self.encoded_username) + " " + loan_amount
 
+                    file = open("keys.txt")
+                    data_file = file.readlines()
+                    key = ""
+
+                    for line in data_file:
+                        s_line = line.strip()
+                        s_line = s_line.split(' ')
+
+                        if s_line[0] == str(encoded_bank_name):
+                            key = s_line[1]
+
                     # Decrypt the msg
-                    encrypted_body = self.encrypt_string(new_body, self.my_key)
+                    encrypted_body = self.encrypt_string(new_body, key)
 
                     # Create a block for loan request
                     new_block = {
@@ -217,15 +225,11 @@ class Client:
                     for char in data_splices[0]:
                         encoded_sender_name += str(ord(char))
 
-                    encoded_sender_name = int(encoded_sender_name)
-
                     # Compute the Ascii for receiver
                     encoded_receiver_name = ""
 
                     for char in data_splices[1]:
                         encoded_receiver_name += str(ord(char))
-
-                    encoded_receiver_name = int(encoded_receiver_name)
 
                     # Create the body of the msg for sender
                     new_body_sender = "Paid $" + \
@@ -287,7 +291,7 @@ class Client:
                     # Checks the ledger for the entries corresponding to the bank and shows all requests
                     for block in self.ledger:
 
-                        if block["header"] == self.encoded_username and block["msg_type"] == "loan_request":
+                        if block["header"] == str(self.encoded_username) and block["msg_type"] == "loan_request":
                             msg_body = block["body"]
 
                             # Decrypt the msg
@@ -304,14 +308,18 @@ class Client:
                     # Checks the ledger for the entries corresponding to the bank and shows all requests
                     for block in self.ledger:
 
-                        if block["header"] == self.encoded_username and block["msg_type"] == "loan_request":
+                        if block["header"] == str(self.encoded_username) and block["msg_type"] == "loan_request":
                             msg_body = block["body"]
 
                             # Decrypt the msg
                             decrypted_body = self.decrypt_string(
                                 msg_body, self.my_key)
-                            encoded_username = decrypted_body[0]
-                            loan_amount = decrypted_body[1]
+
+                            body_splice = decrypted_body.split(" ")
+                            encoded_username = body_splice[0]
+                            loan_amount = body_splice[1]
+
+                            print(decrypted_body)
 
                             # Find the key for requestee
                             key = -1

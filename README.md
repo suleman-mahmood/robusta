@@ -21,7 +21,10 @@ python3 miner.py
 python3 client.py
 ```
 
-Run these commands on two separate terminals.
+Note: Run these commands on two separate terminals.
+
+The miner.py must always be started first and atleast one of its instance must be running at any given time. The miner script maintains the blockchain for all the users so it must be running at all times.
+The clients can however join and leave as they wish, their public keys are stored in a file so that the banks can encrpyt the transaction using it and store their confidential private financial data on the blockchain
 
 ## Description
 

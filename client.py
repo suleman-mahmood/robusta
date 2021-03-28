@@ -371,6 +371,11 @@ class Client:
                             self.sock.sendto(new_block.encode(
                                 "utf-8"), self.server_dest)
 
+                        # function to make sure those approved are not shown again by ledger_to_send
+                            # not completed right now
+                            # general view: add a feild, a boolean possibly, which if is turned to False
+                            # will be treated as a completed request and will not be shown again and again
+
     def receive_handler(self):
         '''
         Waits for a message from server and process it accordingly

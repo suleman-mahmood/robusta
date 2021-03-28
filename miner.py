@@ -2,6 +2,7 @@
 This module defines the behaviour of server in your Chat Application
 '''
 import sys
+import json
 import getopt
 import socket
 import util
@@ -39,15 +40,23 @@ class Server:
             incoming_block = incoming_block.decode("utf-8")
 
             # Maintains the broadcasting list
-            if address not in self.peers_addresses:
+            if incoming_block == "join":
                 self.peers_addresses.append(address)
+
+                ledger_to_send = json.dumps(self.ledger)
+                self.sock.sendto(ledger_to_send.encode("utf-8"), address)
+                continue
+
+            incoming_block = json.loads(incoming_block)
 
             # Add the block to the ledger
             self.ledger.append(incoming_block)
 
+            ledger_to_send = json.dumps(self.ledger)
+
             # Broadcast the updated ledger to the whole network
             for peer_address in self.peers_addresses:
-                self.sock.sendto(self.ledger.encode("utf-8"), peer_address)
+                self.sock.sendto(ledger_to_send.encode("utf-8"), peer_address)
 
 
 # Do not change this part of code

@@ -50,6 +50,7 @@ class Client:
         self.sock.settimeout(None)
         self.sock.bind(('', random.randint(10000, 40000)))
         self.name = username
+        self.server_dest = ("localhost", port)
 
         self.role = ""
         self.encoded_username = -1
@@ -62,12 +63,6 @@ class Client:
         Start by sending the server a JOIN message.
         Waits for userinput and then process it
         '''
-
-        # Prompting the user for a list of available commands
-        print("vfa: View Financial History")
-        print("vlr: Check whether your pending loans requests were accepted or rejected")
-        print("clr: Create a new loan request")
-        print("quit: Exit out of the application")
 
         encoded = ""
         # b = []
@@ -126,6 +121,14 @@ class Client:
         #
         if self.role == "user":
 
+            # Prompting the user for a list of available commands
+            print("vfa: View Financial History")
+            print(
+                "vlr: Check whether your pending loans requests were accepted or rejected")
+            print("clr: Create a new loan request")
+            print("help: Display these list of commands again")
+            print("quit: Exit out of the application")
+
             while True:
                 # input from command line
                 user_input = input()
@@ -141,7 +144,11 @@ class Client:
 
                         if block["header"] == self.encoded_username and block["msg_type"] == "financial_history":
                             msg_body = block["body"]
-                            print(msg_body)
+
+                            # Decrypt the msg
+                            decrypted_body = self.decrypt_string(msg_body)
+
+                            print(decrypted_body)
 
                 # View pending request
                 elif msg_type == "vlr":
@@ -151,7 +158,11 @@ class Client:
 
                         if block["header"] == self.encoded_username and block["msg_type"] == "approve":
                             msg_body = block["body"]
-                            print(msg_body)
+
+                            # Decrypt the msg
+                            decrypted_body = self.decrypt_string(msg_body)
+
+                            print(decrypted_body)
 
                 # Create loan request
                 elif msg_type == "clr":
@@ -161,10 +172,30 @@ class Client:
                         "Enter the bank name from which you want to request the loan from:")
                     loan_amount = input("Enter the loan amount:")
 
-                    msg_body
+                    # Compute the Ascii of the bank
+                    encoded_bank_name = ""
 
-                    # Create a block from your key
+                    for char in bank_name:
+                        encoded_bank_name += str(ord(char))
+
+                    encoded_bank_name = int(encoded_bank_name)
+
+                    # Create the body of the msg
+                    new_body = self.encoded_username + " " + loan_amount
+
+                    # Decrypt the msg
+                    encrypted_body = self.encrypt_string(msg_body)
+
+                    # Create a block for loan request
+                    new_block = {
+                        "header": encoded_bank_name,
+                        "msg_type": "loan_request",
+                        "body": encrypted_body,
+                    }
+
                     # Send the encrypted block to miner so that he can create a block for loan request
+                    self.sock.sendto(new_block.encode(
+                        "utf-8"), self.server_dest)
 
                 elif msg_type == "quit":
 
@@ -172,16 +203,32 @@ class Client:
                     print("Quitting...")
                     break
 
-        # elif self.role == "bank"
+        elif self.role == "bank":
 
-        # Add Financial History
-        # Sends the encrypted block to miner so that he can add it to the ledger
+            # Prompting the bank for a list of available commands
+            print("afh: Add a financial transaction for a user")
+            print("vlr: View all loan requests")
+            print("help: Display these list of commands again")
+            print("quit: Exit out of the application")
 
-        # View Loan Requests
-        # Checks the ledger for the entries corresponding to the bank and shows all requests
+            while True:
+                # input from command line
+                user_input = input()
 
-        # Approve loan request
-        # Sends an approve block to a miner
+                data_splices = user_input.split(" ")
+                msg_type = data_splices[0]
+
+                # Add Financial History
+                if msg_type == "afh":
+
+                    # Sends the encrypted block to miner so that he can add it to the ledger
+
+                    # View Loan Requests
+                elif msg_type == "vlr"
+                # Checks the ledger for the entries corresponding to the bank and shows all requests
+
+                # Approve loan request
+                # Sends an approve block to a miner
 
     def receive_handler(self):
         '''
@@ -202,6 +249,30 @@ class Client:
         #
         #     # Update the ledger
         #     self.ledger = incoming_ledger
+
+    # Encrypts the string using key
+    def encrypt_string(self, msg):
+
+        encrypted_string = ""
+
+        self.my_key = int(self.my_key)
+
+        for char in msg:
+            encrypted_string += chr(ord(char) + self.my_key)
+
+        return encrypted_string
+
+    # Decrytps the string using the same key
+    def decrypt_string(self, msg):
+
+        decrypted_string = ""
+
+        self.my_key = int(self.my_key)
+
+        for char in msg:
+            decrypted_string += chr(ord(char) - self.my_key)
+
+        return decrypted_string
 
 
 # Do not change this part of code

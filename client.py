@@ -24,11 +24,6 @@ for incoming messages in this function.
 #     ...,
 # ]
 
-# block = {
-#     head: "12312312",
-#     body: "transaction data"
-# }
-
 # key = ("9482934823", "5") # 0 - 10
 
 # new_body = ""
@@ -38,7 +33,7 @@ for incoming messages in this function.
 
 # block = {
 #     head: "12312312",
-#     type_of_msg: "financial_history | loan_request | approve",
+#     msg_type: "financial_history | loan_request | approve",
 #     body: "history_data",
 # }
 
@@ -55,9 +50,11 @@ class Client:
         self.sock.settimeout(None)
         self.sock.bind(('', random.randint(10000, 40000)))
         self.name = username
-        self.ledger = {}
 
-        # Ledger variable
+        self.role = ""
+        self.encoded_username = -1
+        self.my_key = -1
+        self.ledger = {}
 
     def start(self):
         '''
@@ -65,6 +62,13 @@ class Client:
         Start by sending the server a JOIN message.
         Waits for userinput and then process it
         '''
+
+        # Prompting the user for a list of available commands
+        print("vfa: View Financial History")
+        print("vlr: Check whether your pending loans requests were accepted or rejected")
+        print("clr: Create a new loan request")
+        print("quit: Exit out of the application")
+
         encoded = ""
         b = []
         for char in self.name:
@@ -73,6 +77,8 @@ class Client:
         # word = "".join([chr(value) for value in b])
         # for i in range(len(b)):
         encoded = int(encoded)
+        self.encoded_username = encoded
+
         file = open("keys.txt")
         data_file = file.read()
         for line in data_file:
@@ -81,12 +87,15 @@ class Client:
             # format.append(s_line)
             if s_line[0] == encoded:
                 # if encoded in self.main.keys():
-                print('welcome Back', self.name, '!\nWhat do you wanna do today?')
+                print('welcome Back', self.name,
+                      '!\nWhat do you wanna do today?')
                 self.role = s_line[2]
                 break
             else:
-                self.role = input("Are you a user or a bank?\nPress 1 for bank, and\n2 for user\n")
+                self.role = input(
+                    "Are you a user or a bank?\nPress 1 for bank, and\n2 for user\n")
                 key = random.randrange(0, 1000)
+                self.my_key = key
 
                 # print(encoded, self.name)
                 # self.main[encoded] = {}
@@ -94,35 +103,64 @@ class Client:
         # check if key exists in a file
         # if key doesnt exist then add a random key into file
 
-        # Update ledger from miner
+        # Request ledger from miner
 
-        #  if customer
+        if self.role == "user":
 
-        while True:
-            pass
-            # input from command line
+            while True:
+                # input from command line
+                user_input = input()
 
-            # View financial history
-            # Read your records from the ledger and display them
+                data_splices = user_input.split(" ")
+                msg_type = data_splices[0]
 
-            # View pending request
-            # Read pending requests from ledger and then display their statuses
+                # View financial history
+                if msg_type = "VFA":
 
-            # Create loan request
-            # Asks the miner to create a block for loan request
+                    # Read your records from the ledger and display them
+                    for block in self.ledger:
 
-            ####
+                        if block["header"] == self.encoded_username and block["msg_type"] == "financial_history":
+                            msg_body = block["body"]
+                            print(msg_body)
 
-            # else bank
+                # View pending request
+                elif msg_type == "VLR":
 
-            # Add Financial History
-            # Sends the encrypted block to miner so that he can add it to the ledger
+                    # Read pending requests from ledger and then display their statuses
+                    for block in self.ledger:
 
-            # View Loan Requests
-            # Checks the ledger for the entries corresponding to the bank and shows all requests
+                        if block["header"] == self.encoded_username and block["msg_type"] == "approve":
+                            msg_body = block["body"]
+                            print(msg_body)
 
-            # Approve loan request
-            # Sends an approve block to a miner
+                # Create loan request
+                elif msg_type == "CLR":
+
+                    # Prompt the user for information about the loan request
+                    bank_name = input(
+                        "Enter the bank name from which you want to request the loan from:")
+                    loan_amount = input("Enter the loan amount:")
+
+                    # Create a block from your key
+                    # Send the encrypted block to miner so that he can create a block for loan request
+
+                elif msg_type == "quit":
+
+                    # Quit the user
+                    print("Quitting...")
+                    break
+
+        elif self.role == "bank"
+
+        # Add Financial History
+        # Sends the encrypted block to miner so that he can add it to the ledger
+
+        # View Loan Requests
+        # Checks the ledger for the entries corresponding to the bank and shows all requests
+
+        # Approve loan request
+        # Sends an approve block to a miner
 
     def receive_handler(self):
         '''
@@ -130,6 +168,19 @@ class Client:
         '''
 
         # The miner sends an updated ledger everytime it changes
+        while True:
+
+            # Recieve the incoming ledger
+            incoming_ledger, address = self.sock.recvfrom(4096)
+
+            # Decode the ledger
+            incoming_ledger = incoming_ledger.decode("utf-8")
+
+            # Convert the ledger from string to list
+            incoming_ledger = json.loads(incoming_ledger)
+
+            # Update the ledger
+            self.ledger = incoming_ledger
 
 
 # Do not change this part of code

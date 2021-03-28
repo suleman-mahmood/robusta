@@ -8,6 +8,7 @@ import random
 from threading import Thread
 import os
 import util
+import json
 
 
 '''
@@ -35,11 +36,11 @@ for incoming messages in this function.
 # for b in body:
 #     new_body.append(ord(b) - 5)
 
-block = {
-    head: "12312312",
-    type_of_msg: "financial_history | loan_request | approve",
-    body: "history_data",
-}
+# block = {
+#     head: "12312312",
+#     type_of_msg: "financial_history | loan_request | approve",
+#     body: "history_data",
+# }
 
 
 class Client:
@@ -54,6 +55,7 @@ class Client:
         self.sock.settimeout(None)
         self.sock.bind(('', random.randint(10000, 40000)))
         self.name = username
+        self.ledger = {}
 
         # Ledger variable
 
@@ -63,7 +65,31 @@ class Client:
         Start by sending the server a JOIN message.
         Waits for userinput and then process it
         '''
+        encoded = ""
+        b = []
+        for char in self.name:
+            b.append(ord(char))
+            encoded = encoded + str(ord(char))
+        # word = "".join([chr(value) for value in b])
+        # for i in range(len(b)):
+        encoded = int(encoded)
+        file = open("keys.txt")
+        data_file = file.read()
+        for line in data_file:
+            s_line = line.strip()
+            s_line = s_line.split(',')
+            # format.append(s_line)
+            if s_line[0] == encoded:
+                # if encoded in self.main.keys():
+                print('welcome Back', self.name, '!\nWhat do you wanna do today?')
+                self.role = s_line[2]
+                break
+            else:
+                self.role = input("Are you a user or a bank?\nPress 1 for bank, and\n2 for user\n")
+                key = random.randrange(0, 1000)
 
+                # print(encoded, self.name)
+                # self.main[encoded] = {}
         # Compute ASCII from username
         # check if key exists in a file
         # if key doesnt exist then add a random key into file
@@ -73,6 +99,7 @@ class Client:
         #  if customer
 
         while True:
+            pass
             # input from command line
 
             # View financial history

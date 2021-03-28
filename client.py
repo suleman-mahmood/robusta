@@ -90,12 +90,13 @@ class Client:
                 print('welcome Back', self.name,
                       '!\nWhat do you wanna do today?')
                 self.role = s_line[2]
+                self.my_key = s_line[1]
                 break
             else:
                 self.role = input(
                     "Are you a user or a bank?\nPress 1 for bank, and\n2 for user\n")
-                key = random.randrange(0, 1000)
-                self.my_key = key
+                self.my_key = random.randrange(0, 1000)
+                print("hello")
 
                 # print(encoded, self.name)
                 # self.main[encoded] = {}

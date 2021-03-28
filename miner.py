@@ -24,11 +24,31 @@ class Server:
         self.sock.bind((self.server_addr, self.server_port))
         self.window = window
 
+        self.ledger = []
+        self.peers_addresses = []
+
     def start(self):
         '''
         Main loop.
         continue receiving messages from Clients and processing it
         '''
+
+        # handling incoming messages from clients or other miners
+        while True:
+
+            incoming_block, address = self.sock.recvfrom(4096)
+            incoming_block = incoming_block.decode("utf-8")
+
+            # Maintains the broadcasting list
+            if address not in self.peers_addresses:
+                self.peers_addresses.append(address)
+
+            # Add the block to the ledger
+            self.ledger.append(incoming_block)
+
+            # Broadcast the updated ledger to the whole network
+            for peer_address in self.peers_addresses:
+                self.sock.sendto(self.ledger.encode("utf-8"), peer_address)
 
 
 # Do not change this part of code

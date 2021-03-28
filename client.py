@@ -224,11 +224,11 @@ class Client:
                     # Sends the encrypted block to miner so that he can add it to the ledger
 
                     # View Loan Requests
-                elif msg_type == "vlr"
-                # Checks the ledger for the entries corresponding to the bank and shows all requests
+                elif msg_type == "vlr":
+                    # Checks the ledger for the entries corresponding to the bank and shows all requests
 
-                # Approve loan request
-                # Sends an approve block to a miner
+                    # Approve loan request
+                    # Sends an approve block to a miner
 
     def receive_handler(self):
         '''

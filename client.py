@@ -115,7 +115,7 @@ class Client:
                 msg_type = data_splices[0]
 
                 # View financial history
-                if msg_type = "VFA":
+                if msg_type == "vfa":
 
                     # Read your records from the ledger and display them
                     for block in self.ledger:
@@ -125,7 +125,7 @@ class Client:
                             print(msg_body)
 
                 # View pending request
-                elif msg_type == "VLR":
+                elif msg_type == "vlr":
 
                     # Read pending requests from ledger and then display their statuses
                     for block in self.ledger:
@@ -135,7 +135,7 @@ class Client:
                             print(msg_body)
 
                 # Create loan request
-                elif msg_type == "CLR":
+                elif msg_type == "clr":
 
                     # Prompt the user for information about the loan request
                     bank_name = input(

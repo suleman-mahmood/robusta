@@ -70,42 +70,60 @@ class Client:
         print("quit: Exit out of the application")
 
         encoded = ""
-        b = []
+        # b = []
         for char in self.name:
-            b.append(ord(char))
+            # b.append(ord(char))
             encoded = encoded + str(ord(char))
         # word = "".join([chr(value) for value in b])
         # for i in range(len(b)):
         encoded = int(encoded)
         self.encoded_username = encoded
-
+        found_user = False
         file = open("keys.txt")
-        data_file = file.read()
+        data_file = file.readlines()
+        print(data_file)
         for line in data_file:
             s_line = line.strip()
-            s_line = s_line.split(',')
+            # s_line = line
+            print(s_line)
+            s_line = s_line.split(' ')
+            print(s_line, "this is bto")
             # format.append(s_line)
-            if s_line[0] == encoded:
+            if s_line[0] == str(encoded):
                 # if encoded in self.main.keys():
                 print('welcome Back', self.name,
                       '!\nWhat do you wanna do today?')
                 self.role = s_line[2]
                 self.my_key = s_line[1]
+                found_user = True
                 break
-            else:
-                self.role = input(
-                    "Are you a user or a bank?\nPress 1 for bank, and\n2 for user\n")
-                self.my_key = random.randrange(0, 1000)
-                print("hello")
+        file.close()
+        if found_user is False:
+            temp = input(
+                "Are you a user or a bank?\nPress 1 for bank, and\n2 for user\n")
+            if temp == '1':
+                self.role = "bank"
+            elif temp == '2':
+                self.role = "user"
+            self.my_key = random.randrange(0, 1000)
+            file = open('keys.txt', 'a')
+            # Append 'hello' at the end of file
+            file.write('\n')
+            write_to = str(encoded) + " " + str(self.my_key) + " " + self.role
 
-                # print(encoded, self.name)
-                # self.main[encoded] = {}
+            print(write_to)
+            file.write(write_to)
+            # Close the file
+            file.close()
+
+            # print(encoded, self.name)
+            # self.main[encoded] = {}
         # Compute ASCII from username
         # check if key exists in a file
         # if key doesnt exist then add a random key into file
 
         # Request ledger from miner
-
+        #
         if self.role == "user":
 
             while True:
@@ -154,7 +172,7 @@ class Client:
                     print("Quitting...")
                     break
 
-        elif self.role == "bank"
+        # elif self.role == "bank"
 
         # Add Financial History
         # Sends the encrypted block to miner so that he can add it to the ledger
@@ -171,19 +189,19 @@ class Client:
         '''
 
         # The miner sends an updated ledger everytime it changes
-        while True:
-
-            # Recieve the incoming ledger
-            incoming_ledger, address = self.sock.recvfrom(4096)
-
-            # Decode the ledger
-            incoming_ledger = incoming_ledger.decode("utf-8")
-
-            # Convert the ledger from string to list
-            incoming_ledger = json.loads(incoming_ledger)
-
-            # Update the ledger
-            self.ledger = incoming_ledger
+        # while True:
+        #
+        #     # Recieve the incoming ledger
+        #     incoming_ledger, address = self.sock.recvfrom(4096)
+        #
+        #     # Decode the ledger
+        #     incoming_ledger = incoming_ledger.decode("utf-8")
+        #
+        #     # Convert the ledger from string to list
+        #     incoming_ledger = json.loads(incoming_ledger)
+        #
+        #     # Update the ledger
+        #     self.ledger = incoming_ledger
 
 
 # Do not change this part of code
